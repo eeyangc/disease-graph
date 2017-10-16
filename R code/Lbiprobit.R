@@ -26,7 +26,7 @@ Lbiprobit <- function(Pvalue, X){
   # Stage 3
   cat("Stage 3 starts... \n")
   alpha <- c(result2.1$alpha, result2.2$alpha)
-  beta <- c(result2.1$beta, result2.2$beta)
+  beta <- t(cbind(result2.1$beta, result2.2$beta))
   result3 <- Update_all(Pvalue, X, alpha, beta, 0)
   cat(" iterations=", result3$iter.times, "\n")
   
@@ -226,7 +226,7 @@ Update_all <- function(Pvalue, X, alpha, beta, rho, maxiter = 1e4, tol = 1e-6){
     # M step
     alpha[1] <- -sum(E_eta1)/sum(E_eta1*log(Pvalue[, 1]))
     alpha[2] <- -sum(E_eta2)/sum(E_eta2*log(Pvalue[, 2]))
-    gamma <- as.matrix(as.numeric((t(E_Z) %*% X) %*% XTX_1), 2, (K + 1))
+    gamma <- matrix(as.numeric((t(E_Z) %*% X) %*% XTX_1), 2, (K+1))
     sum_EZZ <- matrix(c(sum(E_Z1_2), sum(E_Z1_Z2), sum(E_Z1_Z2), sum(E_Z2_2)), 2, 2)
     Sigma <- (sum_EZZ - 2 * gamma %*% (t(X) %*% E_Z) +
                 gamma %*% (t(X) %*% X) %*% t(gamma))/M
